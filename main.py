@@ -37,33 +37,29 @@ def unite_list():
         contacts_list = list(rows)
 
     for c in contacts_list:
-        name = ' '.join(c[:3])
-        new_contact_list[name] = c[3:]
+        name = ' '.join(c[:2])
+        if name not in new_contact_list.keys():
+            new_contact_list[name] = c[2:]
+        else:
+            for cou, data in enumerate(new_contact_list[name]):
+                if data == '':
+                    new_contact_list[name][cou] = c[cou + 2]
 
+    result = []
 
-def remove_duplicates():
-    with open("phonebook.csv", encoding='utf-8') as f:
-        rows = csv.reader(f, delimiter=",")
-        contacts_list = list(rows)
-    k = 0
-    while k < len(contacts_list) - 1:
-        for list1, list2 in zip(contacts_list[k], contacts_list[k + 1]):
-            if list1 == list2:
-                new_list = list(OrderedDict.fromkeys(contacts_list[k] + contacts_list[k + 1]))
-                contacts_list.remove(contacts_list[k + 1])
-                contacts_list.remove(contacts_list[k])
-                contacts_list.append(new_list)
-            break
-        k += 1
+    for name, data in new_contact_list.items():
+        name = name.split()
+        name.extend(data)
+        result.append(name)
 
     with open("phonebook.csv", "w", encoding="utf-8", newline='') as f:
         datawriter = csv.writer(f, delimiter=',')
-        datawriter.writerows(contacts_list)
+        datawriter.writerows(result)
+
 
 current_name()
 current_phone()
-remove_duplicates()
-
+unite_list()
 
 
 
